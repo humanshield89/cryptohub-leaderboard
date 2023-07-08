@@ -30,7 +30,7 @@
 	export let rarityScore: number = 0;
 	export let rank: number = 0;
 
-	$: inDelay = 150 * rank;
+	$: inDelay = 50 * rank;
 	let animated = false;
 
 	const rarityNames = ['10 $HUB', '200 $HUB', '100 $HUB', '10.000 $HUB', 'Shareholder NFT'];
@@ -100,7 +100,7 @@
 
 {#if animated}
 	<div
-		class="flex bg-base-200 p-2 rounded-xl shadow-md gap-4 items-center w-full"
+		class="flex bg-base-200 p-1 md:p-2 rounded-xl shadow-md gap-2 md:gap-4 items-center w-full"
 		transition:fly={{ x: -100, duration: 500, delay: inDelay }}
 	>
 		<div class={'avatar ' + ($signerAddress?.toLowerCase() === minterStats?._id ? 'online' : '')}>
@@ -170,7 +170,9 @@
 						{rarityScore}
 					</b>
 				</div>
-				<div class="col3 justify-center items-center flex-col flex px-4 cursor-pointer text-center">
+				<div
+					class="col3 justify-center items-center flex-col flex px-0 md:px-4 cursor-pointer text-center"
+				>
 					<span class="text-sm font-thin">Total minted</span>
 					<span class="text-2xl font-bold">
 						{minterStats?.count}

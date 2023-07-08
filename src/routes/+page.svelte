@@ -24,29 +24,29 @@
 	import { fade, fly } from 'svelte/transition';
 
 	const rareNFTImages = {
-		606: '/1543.png',
-		701: '/1629.png',
-		1126: '/2010.png',
-		1208: '/2085.png',
-		2751: '/3474.png',
-		3231: '/3906.png',
-		4077: '/4668.png',
-		4158: '/4740.png',
-		4417: '/4974.png',
-		4902: '/91.png'
+		606: '/1543.webp',
+		701: '/1629.webp',
+		1126: '/2010.webp',
+		1208: '/2085.webp',
+		2751: '/3474.webp',
+		3231: '/3906.webp',
+		4077: '/4668.webp',
+		4158: '/4740.webp',
+		4417: '/4974.webp',
+		4902: '/91.webp'
 	};
 
 	const rareNFTToArrary = [
-		'/1543.png',
-		'/1629.png',
-		'/2010.png',
-		'/2085.png',
-		'/3474.png',
-		'/3906.png',
-		'/4668.png',
-		'/4740.png',
-		'/4974.png',
-		'/91.png'
+		'/1543.webp',
+		'/1629.webp',
+		'/2010.webp',
+		'/2085.webp',
+		'/3474.webp',
+		'/3906.webp',
+		'/4668.webp',
+		'/4740.webp',
+		'/4974.webp',
+		'/91.webp'
 	];
 
 	const availableRarities = [
@@ -87,11 +87,16 @@
 	});
 
 	$: topMints = [...allMints]
-		.filter((mint) => mint.rarity === 'Shareholder NFT Winner')
+		.filter((mint) => mint.rarity === /*'100 $HUB Prize' ||*/ 'Shareholder NFT Winner')
 		.slice(0, 10);
 
 	let pageNumber = 1;
 	let perPage = 10;
+	$: totlaPages = Math.ceil(sortedStats?.length / perPage);
+	$: allPages = Array.from({ length: totlaPages }, (_, i) => i + 1);
+	// if pages are less than 6, show all pages otherwise show the first 3, last 3 and the current page
+	$: pages =
+		totlaPages < 6 ? allPages : [1, 2, 3, '...', totlaPages - 2, totlaPages - 1, totlaPages];
 
 	$: paginatedStats = [...sortedStats]?.slice((pageNumber - 1) * perPage, pageNumber * perPage);
 
@@ -147,9 +152,9 @@
 <div class=" h-24 flex items-center justify-center text-white text-2xl font-extrabold">
 	<div class="flex justify-between items-center w-full max-w-7xl px-2 md:px-4">
 		<img src="/logo.png" class="h-24 mr-4" alt="cryptohub" />
-		<div class="flex gap-1">
+		<div class="flex gap-1 items-center flex-wrap md:flex-nowrap">
 			<button
-				class="btn bg-base-300 hover:bg-base-200 tooltip tooltip-bottom"
+				class="btn bg-base-300 w-full md:w-auto hover:bg-base-200 tooltip tooltip-bottom btn-sm md:btn-md"
 				data-tip={$connected ? 'Disconnect Wallet' : 'Connect Wallet'}
 				on:click={() => {
 					if ($connected) {
@@ -166,7 +171,7 @@
 				{/if}
 			</button>
 			<button
-				class="btn btn-primary tooltip tooltip-bottom"
+				class="btn btn-primary w-full md:w-auto tooltip tooltip-bottom btn-sm md:btn-md"
 				data-tip="View on Opensea"
 				on:click={() => {
 					window.open('https://opensea.io/collection/crypto-hubby-s/drop', '_blank');
@@ -183,17 +188,42 @@
     -->
 
 	<div class="flex w-full gap-4 md:flex-nowrap flex-wrap-reverse">
-		<div class="flex flex-col gap-4 basis-full md:basis-2/3">
-			<h1
-				class="font-extrabold text-transparent text-4xl bg-clip-text bg-gradient-to-r from-primary to-secondary text-center m-auto my-4"
-			>
-				CryptoHubby Leaderboard
-			</h1>
+		<div class="flex flex-col gap-4 basis-full w-full md:basis-2/3 px-2 md:px-0">
+			{#if animated}
+				<h1
+					in:fly={{ y: -100, duration: 1000, delay: 100 }}
+					out:fly={{ y: 100, duration: 1000, delay: 100 }}
+					class="font-extrabold text-transparent text-4xl bg-clip-text bg-gradient-to-r from-primary to-secondary text-center m-auto my-4"
+				>
+					CryptoHubby Leaderboard
+				</h1>
+
+				<div
+					in:fly={{ y: 100, duration: 1000, delay: 100 }}
+					out:fly={{ y: -100, duration: 1000, delay: 100 }}
+					class="w-full flex justify-center"
+				>
+					<div class="join">
+						{#each pages as p}
+							<button
+								disabled={isNaN(Number(p))}
+								class={`join-item btn btn-xs ${pageNumber == p ? 'btn-active' : ''}`}
+								on:click={() => {
+									if (isNaN(Number(p))) return;
+									pageNumber = Number(p);
+								}}
+							>
+								{p}
+							</button>
+						{/each}
+					</div>
+				</div>
+			{/if}
 			{#each paginatedStats as userStats, index}
 				<MinterLine
 					minterStats={userStats}
 					{availableRarities}
-					rank={index + 1}
+					rank={(pageNumber - 1) * perPage + index + 1}
 					raritiesCount={formattedRarities(userStats.rarities)}
 					rarityScore={formattedRarities(userStats.rarities).reduce((acc, curr, index) => {
 						return acc + curr * raritiesScore[index];
@@ -223,7 +253,7 @@
 								<div class="p-1">
 									<div class="rounded-xl bg-base-200 p-0">
 										<img
-											src={getImage(mint.hubbyId || 0) || '/1543.png'}
+											src={getImage(mint.hubbyId || 0) || '/1543.webp'}
 											class=" w-full rounded-t-md"
 											alt="nft"
 											loading="lazy"
@@ -396,3 +426,4 @@
 		</div>
 	</div>
 </div>
+<!-- Pagination -->
