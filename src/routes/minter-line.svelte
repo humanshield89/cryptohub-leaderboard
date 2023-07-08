@@ -162,19 +162,25 @@
 				{#each availableRarities as rarity, index}
 					{#if raritiesCount[index] > 0}
 						<div
-							class={`p-1 whitespace-nowrap text-sm tooltip cursor-pointer rounded-xl font-bold bg-opacity-40 ${raritiesbgAndTextColors[index]}`}
+							class={`p-1 whitespace-nowrap text-xs tooltip cursor-pointer rounded-xl bg-opacity-40 ${raritiesbgAndTextColors[index]}`}
 							data-tip={rarity}
 						>
-							{rarityNames[index]} ({raritiesCount[index]})
+							<!--{rarityNames[index]}-->
+							{rarityNames[index]}
+							<b> ({raritiesCount[index]})</b>
 						</div>
 					{/if}
 				{/each}
 			</div>
 		</div>
 		<div class="flex-1 flex justify-end">
-			<div class="my-grid">
+			<div
+				class={`grid grid-rows-2 ${
+					getRankPrize(rank) ? 'grid-cols-2 md:grid-cols-3' : 'grid-cols-2'
+				} `}
+			>
 				<div
-					class="col1 pb-2 md:flex justify-center items-center gap-1 tooltip cursor-pointer hidden"
+					class="pb-2 md:flex justify-center items-center gap-1 tooltip cursor-pointer hidden"
 					data-tip="Averaged Purchase Block Number"
 				>
 					<PackageIcon class="w-4 h-4 text-white" />
@@ -182,46 +188,36 @@
 						{Math.round(minterStats?.averageBlockNumber || 0)}
 					</b>
 				</div>
+
 				<div
-					class="col2 md:flex justify-center items-center gap-1 pb-2 tooltip cursor-pointer hidden"
-					data-tip="Rarity score of all minted tokens"
-				>
-					<ActivityIcon class="w-4 h-4 text-white" />
-					<b>
-						{rarityScore}
-					</b>
-				</div>
-				<div
-					class="col3 justify-center items-center flex-col flex px-0 md:px-4 cursor-pointer text-center"
+					class="justify-between items-between flex-col flex px-0 md:px-4 cursor-pointer text-center row-span-2"
 				>
 					<span class="text-sm font-thin">Total minted</span>
 					<span class="text-2xl font-bold">
 						{minterStats?.count}
 					</span>
 				</div>
+				{#if !!getRankPrize(rank)}
+					<div
+						class="justify-between items-between flex-col flex px-0 md:px-4 cursor-pointer text-center row-span-2"
+					>
+						<span class="text-sm font-thin">Rank Prize</span>
+						<span class="text-2xl font-bold">
+							{getRankPrize(rank)}
+						</span>
+					</div>
+				{/if}
+
+				<div
+					class="md:flex justify-center items-end gap-1 tooltip cursor-pointer hidden"
+					data-tip="Rarity score of all minted tokens"
+				>
+					<ActivityIcon class="w-4 h-4 text-white my-auto" />
+					<b class="my-auto">
+						{rarityScore}
+					</b>
+				</div>
 			</div>
 		</div>
 	</div>
 {/if}
-
-<style>
-	.my-grid {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		grid-template-rows: repeat(2, 1fr);
-		gap: 0px 0px;
-		grid-template-areas:
-			'col1 col3'
-			'col2 col3';
-	}
-
-	.col1 {
-		grid-area: col1;
-	}
-	.col2 {
-		grid-area: col2;
-	}
-	.col3 {
-		grid-area: col3;
-	}
-</style>

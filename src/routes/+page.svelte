@@ -91,7 +91,7 @@
 		.slice(0, 10);
 
 	let pageNumber = 1;
-	let perPage = 10;
+	let perPage = 8;
 	$: totlaPages = Math.ceil(sortedStats?.length / perPage);
 	$: allPages = Array.from({ length: totlaPages }, (_, i) => i + 1);
 	// if pages are less than 6, show all pages otherwise show the first 3, last 3 and the current page
@@ -120,7 +120,7 @@
 
 	onMount(() => {
 		// Add a test to return in SSR context
-		// defaultEvmStores.setProvider();
+		//defaultEvmStores.setProvider();
 	});
 
 	const getImage = (tokenId: number) => {
@@ -131,6 +131,13 @@
 			return rareNFTToArrary[Math.floor(Math.random() * rareNFTToArrary.length)];
 		}
 	};
+
+	$: currentUserRank = !$connected
+		? 0
+		: sortedStats?.findIndex((stat) => {
+				console.log(stat._id, $signerAddress);
+				return stat._id === $signerAddress;
+		  }) + 1;
 </script>
 
 <svelte:head>
@@ -149,7 +156,7 @@
 		style: 'background: #333; color: #fff;'
 	}}
 />
-<div class=" h-24 flex items-center justify-center text-white text-2xl font-extrabold">
+<div class=" h-24 flex items-center justify-center text-white text-2xl font-extrabold md:p-2 p-0">
 	<div class="flex justify-between items-center w-full max-w-7xl px-2 md:px-4">
 		<img src="/logo.png" class="h-24 mr-4" alt="cryptohub" />
 		<div class="flex gap-1 items-center flex-wrap md:flex-nowrap">
@@ -188,7 +195,7 @@
     -->
 
 	<div class="flex w-full gap-4 md:flex-nowrap flex-wrap-reverse">
-		<div class="flex flex-col gap-4 basis-full w-full md:basis-2/3 px-2 md:px-0">
+		<div class="flex flex-col gap-4 basis-full w-full md:basis-3/5 lg:basis-3/5 px-2 md:px-0">
 			{#if animated}
 				<h1
 					in:fly={{ y: -100, duration: 1000, delay: 100 }}
@@ -201,7 +208,9 @@
 				<div
 					in:fly={{ y: 100, duration: 1000, delay: 100 }}
 					out:fly={{ y: -100, duration: 1000, delay: 100 }}
-					class="w-full flex justify-center"
+					class={`w-full flex justify-between ${
+						$connected && currentUserRank ? 'justify-between' : 'justify-center'
+					}`}
 				>
 					<div class="join">
 						{#each pages as p}
@@ -217,6 +226,16 @@
 							</button>
 						{/each}
 					</div>
+					{#if $connected}
+						<div>
+							My Rank: <b
+								>{$connected
+									? (currentUserRank && currentUserRank.toString().padStart(3, '0')) ||
+									  'No Participation'
+									: 'Connect Wallet'}</b
+							>
+						</div>
+					{/if}
 				</div>
 			{/if}
 			{#each paginatedStats as userStats, index}
@@ -232,7 +251,7 @@
 			{/each}
 		</div>
 		<div
-			class=" w-full h-full basis-full md:basis-1/3 overflow-hidden flex flex-col justify-center items-center md:pl-4 md:border-l border-l-base-300"
+			class=" w-full h-full basis-full md:basis-2/5 lg:basis-2/5 overflow-hidden flex flex-col justify-center items-center md:pl-4 md:border-l border-l-base-300"
 		>
 			{#if animated}
 				<div in:fly={{ y: -100, duration: 1000, delay: 100 }}>
@@ -330,7 +349,7 @@
 								href="https://cryptohub.foundation/"
 								target="_blank"
 							>
-								Mint your Share <ExternalLinkIcon class="w-4 h-4 inline-block" />
+								Mint Share <ExternalLinkIcon class="w-4 h-4 inline-block" />
 							</a>
 						</div>
 						<a
