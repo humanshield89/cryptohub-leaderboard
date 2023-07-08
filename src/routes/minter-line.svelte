@@ -35,6 +35,27 @@
 
 	const rarityNames = ['10 $HUB', '200 $HUB', '100 $HUB', '10.000 $HUB', 'Shareholder NFT'];
 
+	const getRankPrize = (r: number) => {
+		switch (r) {
+			case 1:
+				return '1700 USDT';
+			case 2:
+				return '500 USDT';
+			case 3:
+				return '250 USDT';
+			// case where r is between 4 and 8
+			case 4:
+			case 5:
+			case 6:
+			case 7:
+			case 8:
+				return '100 USDT';
+			// no prize for other ranks
+			default:
+				return '';
+		}
+	};
+
 	const raritiesbgAndTextColors = [
 		'bg-yellow-400 bg-opacity-80 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900',
 		'bg-gray-400 bg-opacity-80 bg-gradient-to-r from-gray-400 to-gray-500 text-white',
@@ -158,7 +179,7 @@
 				>
 					<PackageIcon class="w-4 h-4 text-white" />
 					<b>
-						{minterStats?.averageBlockNumber}
+						{Math.round(minterStats?.averageBlockNumber || 0)}
 					</b>
 				</div>
 				<div
