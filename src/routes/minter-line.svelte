@@ -17,6 +17,8 @@
 		signerAddress,
 		contracts
 	} from 'ethers-svelte';
+	import QuestionCircleIcon from '../icons/question-circle-icon.svelte';
+	import { getHubDropPrize, getRankPrize } from '../utils/utils';
 
 	type MinterStats = {
 		_id: string;
@@ -30,31 +32,10 @@
 	export let rarityScore: number = 0;
 	export let rank: number = 0;
 
-	$: inDelay = 50 * rank;
+	$: inDelay = 100 * rank;
 	let animated = false;
 
 	const rarityNames = ['10 $HUB', '200 $HUB', '100 $HUB', '10.000 $HUB', 'Shareholder NFT'];
-
-	const getRankPrize = (r: number) => {
-		switch (r) {
-			case 1:
-				return '1700 USDT';
-			case 2:
-				return '500 USDT';
-			case 3:
-				return '250 USDT';
-			// case where r is between 4 and 8
-			case 4:
-			case 5:
-			case 6:
-			case 7:
-			case 8:
-				return '100 USDT';
-			// no prize for other ranks
-			default:
-				return '';
-		}
-	};
 
 	const raritiesbgAndTextColors = [
 		'bg-yellow-400 bg-opacity-80 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900',
@@ -98,11 +79,11 @@
 	}
 
 	$: {
-		if (rank > 0) {
-			setTimeout(() => {
-				animated = true;
-			}, inDelay);
-		}
+		//if (rank > 0) {
+		setTimeout(() => {
+			animated = true;
+		}, inDelay);
+		//}
 	}
 
 	const rankBackgroudColor = (rank: number) => {
@@ -121,11 +102,11 @@
 
 {#if animated}
 	<div
-		class="flex bg-base-200 p-1 md:p-2 rounded-xl shadow-md gap-2 md:gap-4 items-center w-full"
-		transition:fly={{ x: -100, duration: 500, delay: inDelay }}
+		class="flex bg-base-200 p-1 md:p-2 rounded-xl shadow-md gap-2 md:gap-4 items-center w-full border border-solid border-base-300"
+		transition:fly={{ x: -100, duration: 1000, delay: inDelay }}
 	>
 		<div class={'avatar ' + ($signerAddress?.toLowerCase() === minterStats?._id ? 'online' : '')}>
-			<div class={`avatar placeholder ${rank === 1 ? ' animate-bounce' : ''}`}>
+			<div class={`avatar placeholder ${rank === 1 ? 'animate-none md:animate-bounce' : ''}`}>
 				<div
 					class={`text-neutral-content rounded-full w-12 ${rankBackgroudColor(rank)} ${
 						rank > 3 ? 'bg-opacity-80' : ''
@@ -135,8 +116,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="flex flex-col justify-center gap-2">
-			<div class="text-sm font-bold font-mono flex items-center ml-1">
+		<div class="flex flex-col justify-between h-full p-2 gap-2">
+			<div class="text-xs font-bold flex items-center ml-1">
 				{shortenAddress(minterStats?._id || '')}
 				<a
 					href={`https://etherscan.io/address/${minterStats?._id}`}
@@ -148,7 +129,7 @@
 					<ExternalLinkIcon class=" w-3 h-3 ml-1" />
 				</a>
 				<button
-					class="ml-2 tooltip"
+					class="ml-2 tooltip hidden md:inline"
 					data-tip="Copy address"
 					on:click={() => {
 						navigator.clipboard.writeText(minterStats?._id || '');
@@ -158,6 +139,7 @@
 					<CopyIcon class=" w-3 h-3 ml-1" />
 				</button>
 			</div>
+
 			<div class="flex gap-1">
 				{#each availableRarities as rarity, index}
 					{#if raritiesCount[index] > 0}
@@ -166,7 +148,9 @@
 							data-tip={rarity}
 						>
 							<!--{rarityNames[index]}-->
-							{rarityNames[index]}
+							<span class="hidden md:inline">
+								{rarityNames[index]}
+							</span>
 							<b> ({raritiesCount[index]})</b>
 						</div>
 					{/if}
@@ -174,11 +158,8 @@
 			</div>
 		</div>
 		<div class="flex-1 flex justify-end">
-			<div
-				class={`grid grid-rows-2 ${
-					getRankPrize(rank) ? 'grid-cols-2 md:grid-cols-3' : 'grid-cols-2'
-				} `}
-			>
+			<div class={`flex gap-2`}>
+				<!--
 				<div
 					class="pb-2 md:flex justify-center items-center gap-1 tooltip cursor-pointer hidden"
 					data-tip="Averaged Purchase Block Number"
@@ -188,26 +169,38 @@
 						{Math.round(minterStats?.averageBlockNumber || 0)}
 					</b>
 				</div>
-
+-->
 				<div
-					class="justify-between items-between flex-col flex px-0 md:px-4 cursor-pointer text-center row-span-2"
+					class="justify-between items-between flex-col flex px-0 md:px-4 cursor-pointer text-center"
 				>
-					<span class="text-sm font-thin">Total minted</span>
-					<span class="text-2xl font-bold">
+					<span class="text-base text-white">Prize Collected</span>
+					<span class=" text-lg font-bold">
+						<span>{getHubDropPrize(minterStats?.rarities)}</span>
+						<span class=" text-sm font-normal text-cyan-200"> $HUB </span>
+					</span>
+				</div>
+				<div
+					class="justify-between items-between hidden flex-col md:flex px-0 md:px-4 cursor-pointer text-center"
+				>
+					<span class="text-base text-white">Total minted</span>
+					<span class="text-xl font-bold">
 						{minterStats?.count}
 					</span>
 				</div>
 				{#if !!getRankPrize(rank)}
 					<div
-						class="justify-between items-between flex-col flex px-0 md:px-4 cursor-pointer text-center row-span-2"
+						class="justify-between items-between flex-col flex px-0 md:px-4 cursor-pointer text-center"
 					>
-						<span class="text-sm font-thin">Rank Prize</span>
-						<span class="text-2xl font-bold">
-							{getRankPrize(rank)}
+						<span class="text-base text-white">Rank Prize</span>
+						<span class="text-lg font-bold">
+							{getRankPrize(rank).split(' ')[0]}
+							<span class=" text-sm font-normal text-cyan-200">
+								{getRankPrize(rank).split(' ')[1]}
+							</span>
 						</span>
 					</div>
 				{/if}
-
+				<!--
 				<div
 					class="md:flex justify-center items-end gap-1 tooltip cursor-pointer hidden"
 					data-tip="Rarity score of all minted tokens"
@@ -217,6 +210,7 @@
 						{rarityScore}
 					</b>
 				</div>
+				-->
 			</div>
 		</div>
 	</div>
