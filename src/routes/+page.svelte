@@ -149,18 +149,37 @@
 
 <svelte:head>
 	<title>CryptoHubby Leaderboard</title>
+	<meta name="title" content="CryptoHubby Leaderboard" />
 	<meta
 		name="description"
-		content="Welcome to the Hubby Collection, a unique and captivating world of digital collectibles that will take your imagination on an extraordinary journey.
-
-	This Genesis Collection was created with passion and attention to detail, each Hubby is a carefully crafted masterpiece with prizes inside waiting to be discovered."
+		content="Welcome to the Hubby Collection, a unique and captivating world of digital collectibles that will take your imagination on an extraordinary journey. This Genesis Collection was created with passion and attention to detail, each Hubby is a carefully crafted masterpiece with prizes inside waiting to be discovered."
 	/>
-	<meta property="og:image" content="/og.jpg" />
+	<meta name="keywords" content="cryptohubby, nft, crypto, ethereum, blockchain, collectibles" />
+	<meta name="image" content="https://leaderboard.cryptohub.foundation/og.jpg" />
+
+	<meta property="og:image" content="https://leaderboard.cryptohub.foundation/og.jpg" />
+	<meta property="og:image:type" content="image/jpeg" />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
 	<meta property="og:title" content="CryptoHubby Leaderboard" />
+
 	<meta
 		property="og:description"
 		content="Welcome to the Hubby Collection, a unique and captivating world of digital collectibles that will take your imagination on an extraordinary journey. This Genesis Collection was created with passion and attention to detail, each Hubby is a carefully crafted masterpiece with prizes inside waiting to be discovered."
 	/>
+	<meta property="og:url" content="https://leaderboard.cryptohub.foundation/" />
+	<meta property="og:type" content="website" />
+
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:site" content="@Crypto_hub_web3" />
+	<meta name="twitter:creator" content="@code_rachid" />
+	<meta name="twitter:title" content="CryptoHubby Leaderboard" />
+	<meta
+		name="twitter:description"
+		content="Welcome to the Hubby Collection, a unique and captivating world of digital collectibles that will take your imagination on an extraordinary journey. This Genesis Collection was created with passion and attention to detail, each Hubby is a carefully crafted masterpiece with prizes inside waiting to be discovered."
+	/>
+	<meta name="twitter:image" content="https://leaderboard.cryptohub.foundation/og.jpg" />
+	<meta name="twitter:image:alt" content="CryptoHubby Leaderboard" />
 </svelte:head>
 <Toaster
 	position="bottom-right"
