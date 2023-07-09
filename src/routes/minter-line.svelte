@@ -32,17 +32,19 @@
 	export let rarityScore: number = 0;
 	export let rank: number = 0;
 
-	$: inDelay = 100 * rank;
+	$: inDelay = (100 * rank) % 8;
 	let animated = false;
 
 	const rarityNames = ['10 $HUB', '200 $HUB', '100 $HUB', '10.000 $HUB', 'Shareholder NFT'];
 
+	// opacity decreases based on rank % 8 (0-7) from 100% to 60%
+
 	const raritiesbgAndTextColors = [
-		'bg-yellow-400 bg-opacity-80 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900',
-		'bg-gray-400 bg-opacity-80 bg-gradient-to-r from-gray-400 to-gray-500 text-white',
-		'bg-yellow-600 bg-opacity-80 bg-gradient-to-r from-yellow-600 to-yellow-700 text-white',
-		'bg-gray-600 bg-opacity-80 bg-gradient-to-r from-gray-600 to-gray-700 text-white',
-		'bg-yellow-800 bg-opacity-80 bg-gradient-to-r from-yellow-800 to-yellow-900 text-white'
+		`bg-yellow-400 bg-opacity-80 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900`,
+		`bg-gray-400 bg-opacity-80 bg-gradient-to-r from-gray-400 to-gray-500 text-white`,
+		`bg-yellow-600 bg-opacity-80 bg-gradient-to-r from-yellow-600 to-yellow-700 text-white`,
+		`bg-gray-600 bg-opacity-80 bg-gradient-to-r from-gray-600 to-gray-700 text-white`,
+		`bg-yellow-800 bg-opacity-80 bg-gradient-to-r from-yellow-800 to-yellow-900 text-white`
 	].reverse();
 
 	let imgSrc = '';
@@ -86,16 +88,18 @@
 		//}
 	}
 
-	const rankBackgroudColor = (rank: number) => {
+	$: rankBackgroudColor = (rank: number) => {
+		const opacity = Math.floor((1 - ((rank - 1) % 8) / 10) * 100);
+
 		switch (rank) {
 			case 1:
-				return 'bg-yellow-400 bg-opacity-80 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white';
+				return `bg-yellow-400 bg-opacity-${opacity} bg-gradient-to-r from-yellow-400 to-yellow-500 text-white`;
 			case 2:
-				return 'bg-gray-400 bg-opacity-80 bg-gradient-to-r from-gray-400 to-gray-500 text-white';
+				return `bg-gray-400 bg-opacity-${opacity} bg-gradient-to-r from-gray-400 to-gray-500 text-white`;
 			case 3:
-				return 'bg-yellow-600 bg-opacity-80 bg-gradient-to-r from-yellow-600 to-yellow-700 text-white';
+				return `bg-yellow-600 bg-opacity-${opacity} bg-gradient-to-r from-yellow-600 to-yellow-700 text-white`;
 			default:
-				return 'bg-base-300 bg-opacity-80 bg-gradient-to-r from-base-300 to-base-400 text-neutral-content';
+				return `bg-base-300 bg-opacity-${opacity} bg-gradient-to-r from-base-300 to-base-400 text-neutral-content`;
 		}
 	};
 </script>
